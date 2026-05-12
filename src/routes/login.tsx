@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api, session } from "@/lib/pinterest-api";
 
 export const Route = createFileRoute("/login")({
@@ -17,8 +17,7 @@ function Login() {
   const [lockUntil, setLockUntil] = useState<number | null>(null);
   const [now, setNow] = useState(Date.now());
 
-  // ticking timer for circuit-breaker visual
-  useState(() => { const i = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(i); });
+  useEffect(() => { const i = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(i); }, []);
 
   const locked = lockUntil && now < lockUntil;
   const remaining = lockUntil ? Math.max(0, Math.ceil((lockUntil - now) / 1000)) : 0;
